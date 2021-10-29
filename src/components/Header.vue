@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h1>BLOG POSTS</h1>
+    <h1><router-link to="/">BLOG POSTS</router-link></h1>
   </header>
 </template>
 
@@ -19,6 +19,10 @@ header {
   justify-content: center;
   align-items: center;
   height: 4rem;
-  background-color: #f2f8f8;
+  background-color: #282828;
+}
+a {
+  text-decoration: none;
+  color: #f8f8f8;
 }
 </style>

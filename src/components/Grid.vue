@@ -1,7 +1,7 @@
 <template>
   <ag-grid-vue
-    style="width: 60vw; height: 80vh"
-    class="ag-theme-alpine-dark"
+    style=""
+    class="ag-theme-alpine-dark grid"
     :columnDefs="columnDefs"
     :rowData="rowData"
     :paginationAutoPageSize="true"
@@ -31,24 +31,13 @@ export default {
   components: {
     AgGridVue,
   },
+
+  created() {
+    this.fetchPosts();
+  },
   setup() {
     let rowData = reactive([]);
 
-    onMounted(() => {
-      fetch("https://jsonplaceholder.typicode.com/posts")
-        .then((result) => result.json())
-        .then((remoteRowData) => {
-          remoteRowData.forEach((row: Row) => {
-            const rowDataValues = {
-              ID: row.id,
-              userId: row.userId,
-              title: row.title,
-              rowStyles: { width: "100%" },
-            };
-            rowData.push(rowDataValues);
-          });
-        });
-    });
     return {
       columnDefs: [
         {
@@ -56,9 +45,7 @@ export default {
           field: "ID",
           cellStyle: { "text-align": "left" },
           flex: 1,
-          cellRenderer: function (params: { value: string }) {
-            return `<div v-on:click="router.push({ name: 'post', params: { userId: '123' } })">${params.value}</div>`;
-          },
+         
         },
         {
           headerName: "UserId",
@@ -82,12 +69,27 @@ export default {
 
   methods: {
     onSelectionChanged() {
-      const selectedRows = this.gridApi.getSelectedRows();
+      const selectedRows = this.gridApi?.getSelectedRows();
       router.push({ name: "Post", params: { id: selectedRows[0].ID } });
     },
     onGridReady(params: any) {
       this.gridApi = params.api;
+    },
 
+    fetchPosts() {
+      fetch("https://jsonplaceholder.typicode.com/posts")
+        .then((result) => result.json())
+        .then((remoteRowData) => {
+          remoteRowData.forEach((row: Row) => {
+            const rowDataValues = {
+              ID: row.id,
+              userId: row.userId,
+              title: row.title,
+              rowStyles: { width: "100%" },
+            };
+            this.rowData.push(rowDataValues);
+          });
+        });
     },
   },
 };
@@ -96,4 +98,14 @@ export default {
 <style lang="scss">
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-alpine.css";
+
+.grid{
+  width: 90%;
+  height: 80vh;
+  @media screen and (min-width: 960px) {
+  .grid {
+    width: 70%;
+  }
+}
+}
 </style>
