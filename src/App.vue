@@ -1,12 +1,24 @@
 <template>
-  <div id="nav">
+  <Header />
+  <!-- <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link :to="{ name: 'Post', params: { id: 'mark2021' } }">
       Post
     </router-link>
-  </div>
+  </div> -->
   <router-view />
 </template>
+<script lang="ts">
+import { defineComponent } from "vue";
+import Header from "./components/Header.vue"; // @ is an alias to /src
+
+export default defineComponent({
+  name: "App",
+  components: {
+    Header,
+  },
+});
+</script>
 
 <style lang="scss">
 #app {
