@@ -69,10 +69,10 @@ export default {
 
   methods: {
     onSelectionChanged() {
-      const selectedRows = this.gridApi?.getSelectedRows();
+      const selectedRows = this.gridApi.getSelectedRows();
       router.push({ name: "Post", params: { id: selectedRows[0].ID } });
     },
-    onGridReady(params: any) {
+    onGridReady(params) {
       this.gridApi = params.api;
     },
 
