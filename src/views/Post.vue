@@ -24,23 +24,38 @@
 </template>
 
 <script lang="ts">
+interface Data {
+  img: string;
+  loading: boolean;
+  post: {
+    id: number;
+    userId: number;
+    body: string;
+    title: string;
+  };
+}
 export default {
   name: "Post",
-  data() {
+  data(): Data {
     return {
       img: "",
       loading: false,
-      post: null,
+      post: {
+        id: 0,
+        userId: 0,
+        body: "",
+        title: "",
+      },
     };
   },
-  created() {
+  created(): void {
     this.fetchPost();
   },
   watch: {
     $route: "fetchPost",
   },
   methods: {
-    fetchPost() {
+    fetchPost(): void {
       this.loading = true;
       fetch(
         "https://jsonplaceholder.typicode.com/posts/" + this.$route.params.id
@@ -108,7 +123,7 @@ img {
   .body {
     width: 70vw;
   }
-  .body-container{
+  .body-container {
     font-size: 1.2rem;
   }
 }
@@ -120,7 +135,7 @@ img {
     overflow: hidden;
     max-height: 50vh;
   }
-  h1{
+  h1 {
     font-size: 1.5rem;
   }
 }

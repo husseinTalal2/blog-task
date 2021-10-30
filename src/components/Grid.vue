@@ -3,11 +3,11 @@
     style=""
     class="ag-theme-alpine-dark grid"
     :columnDefs="columnDefs"
-    :rowData="rowData"
-    :paginationAutoPageSize="true"
-    :pagination="true"
-    :rowSelection="rowSelection"
     @grid-ready="onGridReady"
+    :rowData="rowData"
+    paginationAutoPageSize="true"
+    pagination="true"
+    rowSelection="single"
     @selection-changed="onSelectionChanged"
   ></ag-grid-vue>
 </template>
@@ -16,14 +16,36 @@
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 import { AgGridVue } from "ag-grid-vue3";
-import { reactive, onMounted } from "vue";
+import { reactive } from "vue";
 import router from "@/router";
+import { GridReadyEvent } from "ag-grid-community";
 
 interface Row {
   title: string;
   id: number;
   userId: number;
   body: string;
+}
+interface Data {
+  columnDefs: {
+    headerName: string;
+    field: string;
+    cellStyle: { "text-align": string };
+    flex: number;
+  }[];
+  gridApi: any;
+  defaultColDef: {
+    flex: number;
+    minWidth: number;
+  };
+  rowData: {
+    ID: number;
+    userId: number;
+    title: string;
+    rowStyles: {
+      width: string;
+    };
+  }[];
 }
 
 export default {
@@ -32,12 +54,7 @@ export default {
     AgGridVue,
   },
 
-  created() {
-    this.fetchPosts();
-  },
-  setup() {
-    let rowData = reactive([]);
-
+  data(): Data {
     return {
       columnDefs: [
         {
@@ -45,7 +62,6 @@ export default {
           field: "ID",
           cellStyle: { "text-align": "left" },
           flex: 1,
-         
         },
         {
           headerName: "UserId",
@@ -60,23 +76,26 @@ export default {
           flex: 3,
         },
       ],
-      rowData,
-      rowSelection: "single",
       gridApi: null,
-      columnApi: null,
+      defaultColDef: {
+        flex: 1,
+        minWidth: 100,
+      },
+      rowData: reactive([]),
     };
   },
 
   methods: {
-    onSelectionChanged() {
+    onSelectionChanged(): void {
       const selectedRows = this.gridApi.getSelectedRows();
       router.push({ name: "Post", params: { id: selectedRows[0].ID } });
     },
-    onGridReady(params) {
+    onGridReady(params: GridReadyEvent): void {
+      this.fetchPosts();
       this.gridApi = params.api;
     },
 
-    fetchPosts() {
+    fetchPosts(): void {
       fetch("https://jsonplaceholder.typicode.com/posts")
         .then((result) => result.json())
         .then((remoteRowData) => {
@@ -99,13 +118,13 @@ export default {
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-alpine.css";
 
-.grid{
+.grid {
   width: 90%;
   height: 80vh;
   @media screen and (min-width: 960px) {
-  .grid {
-    width: 70%;
+    .grid {
+      width: 70%;
+    }
   }
-}
 }
 </style>
