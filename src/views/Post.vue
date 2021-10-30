@@ -23,20 +23,10 @@
   </div>
 </template>
 
-<script lang="ts">
-interface Data {
-  img: string;
-  loading: boolean;
-  post: {
-    id: number;
-    userId: number;
-    body: string;
-    title: string;
-  };
-}
+<script>
 export default {
   name: "Post",
-  data(): Data {
+  data() {
     return {
       img: "",
       loading: false,
@@ -48,14 +38,14 @@ export default {
       },
     };
   },
-  created(): void {
+  created() {
     this.fetchPost();
   },
   watch: {
     $route: "fetchPost",
   },
   methods: {
-    fetchPost(): void {
+    fetchPost() {
       this.loading = true;
       fetch(
         "https://jsonplaceholder.typicode.com/posts/" + this.$route.params.id

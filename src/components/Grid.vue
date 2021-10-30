@@ -12,41 +12,12 @@
   ></ag-grid-vue>
 </template>
 
-<script lang="ts">
+<script>
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 import { AgGridVue } from "ag-grid-vue3";
 import { reactive } from "vue";
 import router from "@/router";
-import { GridReadyEvent } from "ag-grid-community";
-
-interface Row {
-  title: string;
-  id: number;
-  userId: number;
-  body: string;
-}
-interface Data {
-  columnDefs: {
-    headerName: string;
-    field: string;
-    cellStyle: { "text-align": string };
-    flex: number;
-  }[];
-  gridApi: any;
-  defaultColDef: {
-    flex: number;
-    minWidth: number;
-  };
-  rowData: {
-    ID: number;
-    userId: number;
-    title: string;
-    rowStyles: {
-      width: string;
-    };
-  }[];
-}
 
 export default {
   name: "Grid",
@@ -54,7 +25,7 @@ export default {
     AgGridVue,
   },
 
-  data(): Data {
+  data() {
     return {
       columnDefs: [
         {
@@ -86,20 +57,20 @@ export default {
   },
 
   methods: {
-    onSelectionChanged(): void {
+    onSelectionChanged() {
       const selectedRows = this.gridApi.getSelectedRows();
       router.push({ name: "Post", params: { id: selectedRows[0].ID } });
     },
-    onGridReady(params: GridReadyEvent): void {
+    onGridReady(params) {
       this.fetchPosts();
       this.gridApi = params.api;
     },
 
-    fetchPosts(): void {
+    fetchPosts(){
       fetch("https://jsonplaceholder.typicode.com/posts")
         .then((result) => result.json())
         .then((remoteRowData) => {
-          remoteRowData.forEach((row: Row) => {
+          remoteRowData.forEach((row) => {
             const rowDataValues = {
               ID: row.id,
               userId: row.userId,
